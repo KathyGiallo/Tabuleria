@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using tabuleria_luderia.Models;
 
 namespace tabuleria_luderia.Controllers
 {
+    [Authorize]
     public class LojasController : Controller
     {
         private readonly AppDbContext _context;
@@ -110,6 +112,31 @@ namespace tabuleria_luderia.Controllers
             return View(dados);
         }
 
+        public async Task<IActionResult> Relatorio(int? id)
+        {
+
+            if (id == null)
+                return NotFound();
+
+            var loja = await _context.Lojas.FindAsync(id);
+
+            if(loja == null)
+                return NotFound();
+
+            var jogos = await _context.Jogos
+                .Where(c => c.LojaId == id)
+                .OrderByDescending(c => c.NomeDoJogo)
+                .ToListAsync();
+
+            decimal total = jogos.Sum(c => c.Valor);
+
+
+            ViewBag.Loja = loja;    
+            ViewBag.Total = total;  
+
+
+            return View(jogos);
+        }
     }
 
 }

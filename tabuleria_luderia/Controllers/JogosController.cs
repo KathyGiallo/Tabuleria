@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using tabuleria_luderia.Models;
 
 namespace tabuleria_luderia.Controllers
 {
+    [Authorize]
     public class JogosController : Controller
     {
         private readonly AppDbContext _context;
@@ -47,7 +49,7 @@ namespace tabuleria_luderia.Controllers
         // GET: Jogos/Create
         public IActionResult Create()
         {
-            ViewData["LojaId"] = new SelectList(_context.Lojas, "Id", "Cep");
+            ViewData["LojaId"] = new SelectList(_context.Lojas, "Id", "NomeDaLoja");
             return View();
         }
 
@@ -64,7 +66,7 @@ namespace tabuleria_luderia.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LojaId"] = new SelectList(_context.Lojas, "Id", "Cep", jogo.LojaId);
+            ViewData["LojaId"] = new SelectList(_context.Lojas, "Id", "NomeDaLoja", jogo.LojaId);
             return View(jogo);
         }
 
@@ -81,7 +83,7 @@ namespace tabuleria_luderia.Controllers
             {
                 return NotFound();
             }
-            ViewData["LojaId"] = new SelectList(_context.Lojas, "Id", "Cep", jogo.LojaId);
+            ViewData["LojaId"] = new SelectList(_context.Lojas, "Id", "NomeDaLoja", jogo.LojaId);
             return View(jogo);
         }
 
@@ -117,7 +119,7 @@ namespace tabuleria_luderia.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LojaId"] = new SelectList(_context.Lojas, "Id", "Cep", jogo.LojaId);
+            ViewData["LojaId"] = new SelectList(_context.Lojas, "Id", "NomeDaLoja", jogo.LojaId);
             return View(jogo);
         }
 
